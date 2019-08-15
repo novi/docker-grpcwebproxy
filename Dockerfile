@@ -1,15 +1,16 @@
 FROM alpine AS build
 
-ENV GRPCWEB_VER 0.6.3
+ENV GRPCWEB_VER 0.11.0
 
-RUN apk --update add curl
-
-RUN curl -s -O -L https://github.com/improbable-eng/grpc-web/releases/download/${GRPCWEB_VER}/grpcwebproxy-${GRPCWEB_VER}-linux-x86_64 && \
-    mv grpcwebproxy-${GRPCWEB_VER}-linux-x86_64 /grpcwebproxy && \
+RUN apk --update --no-cache add curl unzip && \
+curl -s -L -o dist.zip https://github.com/improbable-eng/grpc-web/releases/download/v${GRPCWEB_VER}/grpcwebproxy-v${GRPCWEB_VER}-linux-x86_64.zip && \
+    unzip dist.zip && \
+    mv dist/grpcwebproxy-v${GRPCWEB_VER}-linux-x86_64 /grpcwebproxy && \
+    rm dist.zip && \
     chmod +x /grpcwebproxy
 
-FROM scratch
+FROM alpine
 
 COPY --from=build /grpcwebproxy /grpcwebproxy
 
-ENTRYPOINT ["/grpcwebproxy"]
+ENTRYPOINT ["/bin/sh", "-c", "/grpcwebproxy"]
