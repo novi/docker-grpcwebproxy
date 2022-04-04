@@ -12,7 +12,7 @@ jobs:
             command: |
               echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin
       - checkout
-      - run: docker build -t yusukeito/grpcwebproxy:${CIRCLE_BRANCH} . && docker push yusukeito/grpcwebproxy:${CIRCLE_BRANCH}
+      - run: docker build -t yusukeito/grpcwebproxy:${CIRCLE_TAG} . && docker push yusukeito/grpcwebproxy:${CIRCLE_TAG}
 
 workflows:
   version: 2
